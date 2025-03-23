@@ -75,42 +75,26 @@ public final class ViewAnnotationManager {
         get { _validatesViews }
         set { _validatesViews = newValue }
     }
-    private var _validatesViews = true
+private var _validatesViews = true
 
-    /// The list of view annotations added to the manager.
-    public var allAnnotations: [ViewAnnotation] {
-        Array(objectAnnotations.values)
-    }
+/// The list of view annotations added to the manager.
+public var allAnnotations: [ViewAnnotation] {
+    Array(objectAnnotations.values)
+}
 
-    /// Specify layers that view annotations should avoid. This applies to ALL view annotations associated to any layer.
-    /// The API currently only supports line layers.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
-    public var viewAnnotationAvoidLayers: Set<String> {
-        get { mapboxMap.viewAnnotationAvoidLayers }
-        set { mapboxMap.viewAnnotationAvoidLayers = newValue }
-    }
+/// Specify layers that view annotations should avoid. This applies to ALL view annotations associated to any layer.
+/// The API currently only supports line layers.
+@_spi(Experimental)
+@_documentation(visibility: public)
+public var viewAnnotationAvoidLayers: Set<String> {
+    get { mapboxMap.viewAnnotationAvoidLayers }
+    set { mapboxMap.viewAnnotationAvoidLayers = newValue }
+}
 
-    /// The complete list of annotations associated with the receiver.
-     /// The list of view annotations added to the manager.
-    public var allAnnotations: [ViewAnnotation] {
-        Array(objectAnnotations.values)
-    }
-
-    /// Specify layers that view annotations should avoid. This applies to ALL view annotations associated to any layer.
-    /// The API currently only supports line layers.
-    @_spi(Experimental)
-    @_documentation(visibility: public)
-    public var viewAnnotationAvoidLayers: Set<String> {
-        get { mapboxMap.viewAnnotationAvoidLayers }
-        set { mapboxMap.viewAnnotationAvoidLayers = newValue }
-    }
-
-   
-    /// The complete list of annotations associated with the receiver.
-    /// Deprecated: changed key type from UIView to String to fix SwiftCompile issues.
-    @available(*, deprecated, renamed: "allAnnotations", message: "Please use allAnnotations instead, or directly access ViewAnnotation itself")
-    public var annotations: [String: ViewAnnotationOptions] {
+/// Deprecated: changed key type from UIView to String to fix SwiftCompile issues.
+/// Use `allAnnotations` instead, or directly access `ViewAnnotation` itself.
+@available(*, deprecated, renamed: "allAnnotations", message: "Please use allAnnotations instead, or directly access ViewAnnotation itself")
+public var annotations: [String: ViewAnnotationOptions] {
     viewsById.compactMapValues { view in
         guard let id = idsByView[view] else { return nil }
         return try? mapboxMap.options(forViewAnnotationWithId: id)
