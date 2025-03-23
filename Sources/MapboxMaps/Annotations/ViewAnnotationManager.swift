@@ -92,13 +92,30 @@ public final class ViewAnnotationManager {
     }
 
     /// The complete list of annotations associated with the receiver.
-    @available(*, deprecated, renamed: "allAnnotations", message: "Please use allAnnotations instead, or directly access ViewAnnotation itself")
-    public var annotations: [UIView: ViewAnnotationOptions] {
-        let values = idsByView.compactMapValues { [mapboxMap] id in
-            try? mapboxMap.options(forViewAnnotationWithId: id)
-        }
-        return values
+     /// The list of view annotations added to the manager.
+    public var allAnnotations: [ViewAnnotation] {
+        Array(objectAnnotations.values)
     }
+
+    /// Specify layers that view annotations should avoid. This applies to ALL view annotations associated to any layer.
+    /// The API currently only supports line layers.
+    @_spi(Experimental)
+    @_documentation(visibility: public)
+    public var viewAnnotationAvoidLayers: Set<String> {
+        get { mapboxMap.viewAnnotationAvoidLayers }
+        set { mapboxMap.viewAnnotationAvoidLayers = newValue }
+    }
+
+   
+    /// The complete list of annotations associated with the receiver.
+    /// Deprecated: changed key type from UIView to String to fix SwiftCompile issues.
+    @available(*, deprecated, renamed: "allAnnotations", message: "Please use allAnnotations instead, or directly access ViewAnnotation itself")
+    public var annotations: [String: ViewAnnotationOptions] {
+    viewsById.compactMapValues { view in
+        guard let id = idsByView[view] else { return nil }
+        return try? mapboxMap.options(forViewAnnotationWithId: id)
+    }
+}
 
     internal init(containerView: UIView, mapboxMap: MapboxMapProtocol, displayLink: Signal<Void>) {
         self.containerView = containerView
